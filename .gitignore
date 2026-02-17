@@ -1,0 +1,17 @@
+# Python environment
+.env
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+
+# Data files
+seen_videos.json
+records.json
+*.tmp
+
+# IDEs
+.vscode/
+.idea/
