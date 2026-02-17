@@ -117,7 +117,7 @@ def load_json(filepath, default):
     return default
 
 def get_subscriptions():
-    """Load subscriptions from file and filter for relevant (Finance/Crypto) channels."""
+    """Load subscriptions from file."""
     if not os.path.exists(SUBSCRIPTION_FILE):
         logging.warning(f"Subscription file not found: {SUBSCRIPTION_FILE}")
         return []
@@ -126,22 +126,8 @@ def get_subscriptions():
         with open(SUBSCRIPTION_FILE, 'r', encoding='utf-8') as f:
             lines = [line.strip() for line in f if line.strip() and not line.startswith('#')]
         
-        # Finance/Crypto keywords to filter relevant channels
-        keywords = [
-            '股市', '財經', '投資', '比特幣', '加密', '美股', '港股', '幣圈', '金融', 
-            'Bitcoin', 'Crypto', 'Stock', 'Market', 'BTC', 'ETH', 'ADA', 'XRP', 
-            '分析', '行情', '策略', '金', '銀', '油', 'Money', 'Wealth', 'Trading', 
-            'Invest', 'Finance', 'Economics', 'Dividend', 'Option', 'Future', 'Fund',
-            'Business', 'Capital', 'Asset'
-        ]
-        
-        relevant_subs = [
-            sub for sub in lines 
-            if any(kw.lower() in sub.lower() for kw in keywords)
-        ]
-        
-        logging.info(f"Loaded {len(relevant_subs)} relevant subscriptions out of {len(lines)} total.")
-        return relevant_subs
+        logging.info(f"Loaded {len(lines)} subscriptions.")
+        return lines
     except Exception as e:
         logging.error(f"Error loading subscriptions: {e}")
         return []
@@ -315,14 +301,14 @@ def main():
         logging.info("Cycle started...")
         new_batch = []
         
-        # Batch processing: Randomly select 50 channels to check per cycle to manage rate limits/time
-        # Time complexity: 50 searches * ~2s = 100s + summary time. 
+        # Batch processing: Randomly select 60 channels to check per cycle to manage rate limits/time
+        # Time complexity: 60 searches * ~2s = 120s + summary time. 
         # Summary time for 5 videos = 5 * 10s = 50s. Total < 3 mins. Safe for 5 min sleep.
         if not subscription_channels:
              logging.warning("No subscriptions loaded. Please check 訂閱.txt")
              current_batch_subs = []
         else:
-            current_batch_subs = random.sample(subscription_channels, min(50, len(subscription_channels)))
+            current_batch_subs = random.sample(subscription_channels, min(60, len(subscription_channels)))
         
         if current_batch_subs:
             logging.info(f"Checking {len(current_batch_subs)} channels in this cycle: {current_batch_subs[:5]}...")
