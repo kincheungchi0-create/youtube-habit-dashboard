@@ -11,6 +11,7 @@ ENV/
 seen_videos.json
 records.json
 *.tmp
+daemon.log
 
 # IDEs
 .vscode/

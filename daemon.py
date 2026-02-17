@@ -273,7 +273,12 @@ def update_website(all_records):
 def git_push():
     try:
         subprocess.run(["git", "add", "."], check=True, capture_output=True)
-        subprocess.run(["git", "commit", "-m", f"Dashboard update {datetime.now().strftime('%H:%M')}"], check=True, capture_output=True)
+        try:
+            subprocess.run(["git", "commit", "-m", f"Dashboard update {datetime.now().strftime('%H:%M')}"], check=True, capture_output=True)
+        except subprocess.CalledProcessError:
+            pass # Nothing to commit, continue to pull and push
+            
+        subprocess.run(["git", "pull"], check=True, capture_output=True)
         subprocess.run(["git", "push"], check=True, capture_output=True)
         logging.info("Git push successful")
     except subprocess.CalledProcessError as e:
